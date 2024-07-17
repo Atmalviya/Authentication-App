@@ -8,7 +8,7 @@ import { passwordValidator } from "../helper/validate.js";
 const Password = () => {
   const formik = useFormik({
     initialValues: {
-      password: 'admin@123',
+      Password: '',
     },
     validate: passwordValidator,
     validateOnBlur: false,

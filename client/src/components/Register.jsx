@@ -13,7 +13,7 @@ const Register = () => {
     initialValues: {
       email:'',
       userName: '',
-      password: 'admin@123',
+      Password: '',
     },
     validate: registerValidator,
     validateOnBlur: false,

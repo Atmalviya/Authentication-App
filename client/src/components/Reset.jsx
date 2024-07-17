@@ -6,8 +6,8 @@ import { resetPasswordValidator } from "../helper/validate.js";
 const Reset = () => {
   const formik = useFormik({
     initialValues: {
-      password: '',
-      confirmPassword: '',
+      Password: 'asda',
+      confirmPassword: 'dasad',
     },
     validate: resetPasswordValidator,
     validateOnBlur: false,
