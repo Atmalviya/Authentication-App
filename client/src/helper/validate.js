@@ -29,6 +29,12 @@ export const registerValidator = async (values) => {
   return error;
 };
 
+//* validate prfile form
+export const profileValidator = async (values) => {
+  const error = checkEmail({}, values);
+  return error;
+};
+
 //* checking Email
 const checkEmail = async (error = {}, values) => {
   if (!values.email) {
