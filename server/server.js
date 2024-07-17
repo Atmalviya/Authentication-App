@@ -1,17 +1,18 @@
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
-const morgan = require("morgan");
 const dotenv = require("dotenv");
-const connectDB = require("./DB/conn");
 dotenv.config();
 const app = express();
 
-// middleware
+//* Local imports 
+const connectDB = require("./DB/conn");
+const router = require("./router/routes");
+
+//* middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(morgan("tiny"));
 app.disable("x-powered-by");
 
 
@@ -21,6 +22,9 @@ const PORT = process.env.PORT || 5000;
 app.get("/", (req, res) => {
     res.status(201).json("Hello World!");
 });
+
+//* Routes 
+app.use("/api", router);
 
 connectDB().then(() => {
     try {
