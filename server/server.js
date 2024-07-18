@@ -12,7 +12,7 @@ const router = require("./router/routes");
 //* middleware
 app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// app.use(express.urlencoded({ extended: true }));
 app.disable("x-powered-by");
 
 
