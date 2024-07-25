@@ -3,9 +3,7 @@ const mailGen = require("mailgen");
 require("dotenv").config();
 
 let nodeConfig = {
-  host: "smtp.ethereal.email",
-  port: 587,
-  secure: false, // Use `true` for port 465, `false` for all other ports
+  service: "gmail",
   auth: {
     user: process.env.EMAIL,
     pass: process.env.PASSWORD,
@@ -27,8 +25,8 @@ const registerMail = async (req, res) => {
   const email = {
     body: {
       name: username,
-      intro: text || "Welcome to Mailgen! We're very excited to have you on board.",
-      outro: "Thank you for using Mailgen!",
+      intro: text || "Welcome to Authentication App! We're very excited to have you on board.",
+      outro: "Thank you for using Authentication App!",
       signature: "Best Regards,"
         
     }
@@ -39,7 +37,7 @@ const registerMail = async (req, res) => {
   let message = {
     from: process.env.MAIL,
     to: userEmail,
-    subject: subject || `Hello ${username}, Welcome to Mailgen!`,
+    subject: subject || `Hello ${username}, Welcome to Authentication App!`,
     html: emailBody,
   };
 
