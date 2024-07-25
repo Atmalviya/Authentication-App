@@ -42,18 +42,17 @@ async function register(req, res) {
 
     // Create new user
     const newUser = new User({
-      username,
+      username : req.body.username,
       email,
       password: hashedPassword,
       profile: profile || "",
     });
-
     const userData = await newUser.save();
     return res
       .status(201)
       .json({ message: "User registerd successfully", userData });
   } catch (error) {
-    return res.status(500).json({ message: "Internal server error", error });
+    return res.status(500).json({ message: "Internal server error", error : error.message });
   }
 }
 
@@ -71,7 +70,7 @@ async function login(req, res) {
     }
 
     // Generate JWT token
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ id: user._id, username: user.username }, process.env.JWT_SECRET, {
       expiresIn: "1h",
     });
     user.password = undefined;
@@ -86,9 +85,7 @@ async function login(req, res) {
 }
 
 //* Register Mail Route
-async function registerMail(req, res) {
-    
-}
+async function registerMail(req, res) {}
 
 //* authenticate Route
 async function authenticate(req, res) {
@@ -115,7 +112,7 @@ async function updateUser(req, res) {
     );
     return res
       .status(201)
-      .json({ msg: "User updated successfully", updatedUser });
+      .json({ msg: "User profile updated successfully", updatedUser });
   } catch (error) {
     return res.status(500).json({ message: "Internal server error", error });
   }
@@ -128,7 +125,7 @@ async function generateOTP(req, res) {
     upperCaseAlphabets: false,
     specialChars: false,
   });
-  res.status(200).json({ otp: req.app.locals.OTP });
+  res.status(201).json({ otp: req.app.locals.OTP });
 }
 
 //* Verify OTP Route
@@ -145,8 +142,8 @@ async function verifyOTP(req, res) {
 //* create reset session
 async function createResetSession(req, res) {
   if (req.app.locals.resetSession) {
-    req.app.locals.resetSession = false;
-    return res.status(201).json({ message: "Reset session created" });
+    
+    return res.status(201).json({flag : req.app.locals.resetSession });
   }
   return res.status(400).json({ error: "session expired" });
 }

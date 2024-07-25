@@ -6,7 +6,7 @@ const {registerMail} = require("../controller/mailer");
 //* POST Routes
 router.route("/register").post(controller.register);
 router.route("/registerMail").post(registerMail);
-router.route("/authenticate").post(controller.authenticate);
+router.route("/authenticate").post(controller.verifyUser, (req, res) => res.end());
 router.route("/login").post(controller.login);
 
 //* GET Routes
