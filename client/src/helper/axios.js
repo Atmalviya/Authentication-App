@@ -1,6 +1,18 @@
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 
 axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
+
+//* Get Username from token
+export const getUsername = async () => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    const decodedToken = jwtDecode(token);
+    if (decodedToken) {
+      return decodedToken;
+    }
+  }
+};
 
 //* Authenticate function
 export const authenticate = async (username) => {
@@ -24,7 +36,10 @@ export const getUser = async ({ username }) => {
 //* Register User
 export const registerUser = async (credentials) => {
   try {
-    const { data: { message }, status,} = await axios.post("/api/register", credentials);
+    const {
+      data: { message },
+      status,
+    } = await axios.post("/api/register", credentials);
 
     let { username, email } = credentials;
 
@@ -36,9 +51,10 @@ export const registerUser = async (credentials) => {
         text: message,
       });
     }
-    return { message }
+    return { message };
   } catch (error) {
-    const errorMessage = error.response?.data?.message || "An error occurred during registration.";
+    const errorMessage =
+      error.response?.data?.message || "An error occurred during registration.";
     return Promise.reject({ message: errorMessage });
   }
 };
@@ -76,13 +92,9 @@ export const updateUser = async (response) => {
 export const generateOTP = async (username) => {
   try {
     const {
-      data: { otp },
-      status,
-    } = await axios.get("/api/generateOTP", { params: { username } });
+      data: { otp }, status } = await axios.get("/api/generateOTP", { params: { username } });
     if (status === 201) {
-      let {
-        res: { email },
-      } = await getUser({ username });
+      let {email} = await getUser({ username });
       let text = `Your password recover OTP is ${otp}. verify and recover your password.`;
       await axios.post("/api/registerMail", {
         username,
@@ -93,27 +105,33 @@ export const generateOTP = async (username) => {
       return Promise.resolve(otp);
     }
   } catch (error) {
-    return Promise.reject({ error: "Couldn't generate OTP" });
+    return Promise.reject({ error});
   }
 };
 
-
 //* Verify OTP
-export const verifyOTP = async ({username, otp}) => {
-    try {
-        const { data, status } = await axios.get("/api/verifyOTP", { params: { username, otp } });
-        return { data, status };
-    } catch (error) {
-        return Promise.reject({ error: "Couldn't verify OTP" });
-    } 
-} 
+export const verifyOTP = async ({ username, otp }) => {
+  try {
+    const { data, status } = await axios.get("/api/verifyOTP", {
+      params: { username, otp },
+    });
+    console.log(data, status);
+    return { data, status };
+  } catch (error) {
+    return Promise.reject({ error: "Couldn't verify OTP" });
+  }
+};
 
-//* Reset Password 
+//* Reset Password
 export const resetPassword = async ({ username, password }) => {
-    try {
-        const { data, status } = await axios.put("/api/updatePassword", { username, password });
-        return Promise.resolve({ data, status });
-    } catch (error) {
-        return Promise.reject({ error: "Couldn't reset password" });
-    }
-} 
+  console.log(username, password);
+  try {
+    const { data, status } = await axios.put("/api/updatePassword", {
+      username,
+      password,
+    });
+    return Promise.resolve({ data, status });
+  } catch (error) {
+    return Promise.reject({ error: "Couldn't reset password" });
+  }
+};
