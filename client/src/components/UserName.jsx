@@ -49,7 +49,7 @@ const UserName = () => {
                 {...formik.getFieldProps("username")}
               />
               <button className={styles.btn} type="submit">
-                Let's Go
+                Let&apos;s Go
               </button>
             </div>
             <div className="text-center py-4">

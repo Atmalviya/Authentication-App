@@ -33,7 +33,6 @@ const Register = () => {
         toast.error(error.message || "Could not Register..."); // Show error message from server
       } finally {
         toast.dismiss(loadingToast);
-        
       }
     },
   });
