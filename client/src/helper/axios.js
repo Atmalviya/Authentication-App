@@ -1,7 +1,7 @@
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 
-axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
+axios.defaults.baseURL = "https://authentication-server.up.railway.app"
 
 //* Get Username from token
 export const getUsername = async () => {
