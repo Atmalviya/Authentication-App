@@ -1,8 +1,18 @@
 import toast from "react-hot-toast";
+import { authenticate } from "./axios"
 
 //* validate username
 export const userNameValidator = async (values) => {
   const error = checkUsername({}, values);
+  if(values.username){
+    // check user exist in DB or not
+    const loadingToast = toast.loading("Checking username...");
+    const { status } = await authenticate(values.username);
+    if(status !== 200){
+      error.exist = toast.error("User does not exist")
+    }
+    toast.dismiss(loadingToast);
+  }
   return error;
 };
 
@@ -15,7 +25,7 @@ export const passwordValidator = async (values) => {
 //* Validate reset password
 export const resetPasswordValidator = async (values) => {
   const error = checkPassword({}, values);
-  if (values.Password !== values.confirmPassword) {
+  if (values.password !== values.confirmPassword) {
     error.exist = toast.error("Passwords do not match");
   }
   return error;
@@ -51,24 +61,24 @@ const checkEmail = async (error = {}, values) => {
 const checkPassword = async (error = {}, values) => {
   /* eslint-disable no-useless-escape */
   const specialChars = /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
-  if (!values.Password) {
-    error.Password = toast.error("Password is required");
-  } else if (values.Password.includes(" ")) {
-    error.Password = toast.error("Password cannot contain spaces");
-  } else if (values.Password.length < 8) {
-    error.Password = toast.error("Password must be at least 8 characters");
-  } else if (!specialChars.test(values.Password)) {
-    error.Password = toast.error("Password must contain special characters");
+  if (!values.password) {
+    error.password = toast.error("Password is required");
+  } else if (values.password.includes(" ")) {
+    error.password = toast.error("Password cannot contain spaces");
+  } else if (values.password.length < 8) {
+    error.password = toast.error("Password must be at least 8 characters");
+  } else if (!specialChars.test(values.password)) {
+    error.password = toast.error("Password must contain special characters");
   }
   return error;
 };
 
 //* checking userName
 function checkUsername(error = {}, values) {
-  if (!values.userName) {
-    error.userName = toast.error("Username Required...!");
-  } else if (values.userName.includes(" ")) {
-    error.userName = toast.error("Invalid Username...!");
+  if (!values.username) {
+    error.username = toast.error("Username Required...!");
+  } else if (values.username.includes(" ")) {
+    error.username = toast.error("Invalid Username...!");
   }
 
   return error;
