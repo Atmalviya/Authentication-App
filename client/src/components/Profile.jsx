@@ -1,29 +1,45 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import avater from "../assets/profile.png";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import { useFormik } from "formik";
 import styles from "../styles/Username.module.css";
-import extend from "../styles/profile.module.css"
+import extend from "../styles/profile.module.css";
 import { profileValidator } from "../helper/validate.js";
 import { convertToBase64 } from "../helper/convert.js";
+import useFetch from "../Hooks/fetch.hook.js";
+import { updateUser } from "../helper/axios.js";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
+  const navigate = useNavigate();
   const [file, setFile] = useState();
+  const [{ isLoading, apiData, serverError }] = useFetch();
+
   const formik = useFormik({
     initialValues: {
-      firstName : '',
-      lastName : "",
-      contact : "",
-      email: "",
-      address: ""
+      firstName: apiData?.firstName || "",
+      lastName: apiData?.lastName || "",
+      contact: apiData?.contact || "",
+      email: apiData?.email || "",
+      address: apiData?.address || "",
     },
+    enableReinitialize: true,
     validate: profileValidator,
     validateOnBlur: false,
     validateOnChange: false,
     onSubmit: async (values) => {
-      values = await Object.assign(values, { profile: file || "" });
-      console.log(values);
+      const loadingToast = toast.loading("Updating profile...");
+      values = await Object.assign(values, { profile: apiData?.profile || file || "" });
+      try {
+        const response = await updateUser(values);
+        toast.dismiss(loadingToast.id);
+        toast.success(response.data.data.msg);
+
+      } catch (error) {
+        toast.error(error.response.data.data.msg);
+        toast.dismiss(loadingToast.id);
+        return;
+      }
     },
   });
 
@@ -31,6 +47,22 @@ const Profile = () => {
     const base64 = await convertToBase64(e.target.files[0]);
     setFile(base64);
   };
+
+  if (isLoading) {
+    return <h1 className="text-2xl font-bold">Loading...</h1>;
+  }
+  if (serverError) {
+    return (
+      <h1 className="text-2xl font-bold text-red-500">Error: {serverError}</h1>
+    );
+  }
+
+  //* User Logout
+  const logout = () => {
+    localStorage.removeItem("token");
+    navigate("/");
+  }
+
 
   return (
     <div className="container mx-auto">
@@ -50,7 +82,7 @@ const Profile = () => {
             <div className="profile flex justify-center py-4">
               <label htmlFor="profile">
                 <img
-                  src={file || avater}
+                  src={apiData?.profile || file || avater}
                   alt="avatar"
                   className={`${styles.profile_img}  ${extend.profile_img}`}
                 />
@@ -109,10 +141,10 @@ const Profile = () => {
             <div className="text-center py-4">
               <span>
                 Come back later?{" "}
-                <Link className="text-gray-500" to="/login">
-                  Log out
-                </Link>
-              </span>
+                <button className="text-gray-500" onClick={logout}>
+                  Logout
+                </button>
+              </span> 
             </div>
           </form>
         </div>
