@@ -9,6 +9,7 @@ import Recovery from './components/Recovery';
 import Register from './components/Register';
 import Reset from './components/Reset';
 import UserName from './components/UserName';
+import {AuthorizedUser, ProtectedRoute} from './middleware/auth'; // Keep this import if you plan to use it
 
 function App() {
   return (
@@ -17,8 +18,8 @@ function App() {
         <Routes>
           <Route path="/" element={<UserName />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/password" element={<Password />} />
+          <Route path="/profile" element={<AuthorizedUser><Profile /></AuthorizedUser>} />
+          <Route path="/password" element={<ProtectedRoute><Password /></ProtectedRoute>} />
           <Route path="/recovery" element={<Recovery />} />
           <Route path="/reset" element={<Reset />} />
           <Route path="*" element={<PageNotFound />} />
