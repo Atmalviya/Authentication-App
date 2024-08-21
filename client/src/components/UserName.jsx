@@ -5,7 +5,6 @@ import { useFormik } from "formik";
 import styles from "../styles/Username.module.css";
 import { userNameValidator } from "../helper/validate.js";
 import { useAuthStore } from "../store/store.js";
-import { useEffect } from "react";
 
 const UserName = () => {
   const navigate = useNavigate();

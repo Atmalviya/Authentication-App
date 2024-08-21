@@ -36,7 +36,7 @@ const Profile = () => {
         toast.success(response.data.data.msg);
 
       } catch (error) {
-        toast.error(error.response.data.data.msg);
+        toast.error(error.message);
         toast.dismiss(loadingToast.id);
         return;
       }
@@ -95,6 +95,13 @@ const Profile = () => {
               />
             </div>
             <div className="textbox flex flex-col items-center gap-6">
+            <input
+                  type="email"
+                  placeholder="email"
+                  className={`${styles.textbox}  ${extend.textbox}`}
+                  {...formik.getFieldProps("email")}
+                  disabled
+                />
               {/* //* first name and last name */}
               <div className="name flex w-3/4 gap-10">
                 <input
@@ -119,13 +126,8 @@ const Profile = () => {
                   className={`${styles.textbox}  ${extend.textbox}`}
                   {...formik.getFieldProps("contact")}
                 />
-                <input
-                  type="email"
-                  placeholder="email"
-                  className={`${styles.textbox}  ${extend.textbox}`}
-                  {...formik.getFieldProps("email")}
-                />
               </div>
+                
 
               <input
                 type="text"

@@ -10,11 +10,14 @@ const connectDB = require("./DB/conn");
 const router = require("./router/routes");
 
 //* middleware
-app.use(
-  cors({
-    origin: '*',
-    credentials: true,
-  }));
+app.use(cors({
+  origin: process.env.ALLOWED_ORIGINS, // Allows all origins
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE", // Specifies allowed methods
+  allowedHeaders: "Content-Type,Authorization", // Specifies allowed headers
+  credentials: true,
+  optionsSuccessStatus: 204 // Some legacy browsers (IE11, various SmartTVs) choke on 204
+}));
+app.options('*', cors()); // Handles preflight requests
 app.use(express.json());
 app.disable("x-powered-by");
 
